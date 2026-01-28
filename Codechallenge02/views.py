@@ -24,6 +24,21 @@ def home(request):
     t9 = Topic('Forms','Handles user input and validation safely')
     t10 = Topic('Middleware','Hooks into Django request/response processing')
 
-    topic_list = [t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,]
+   
+    all_topics = [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10]
 
-    return render(request,'index.html',{'topics':topic_list})
+    search_query = request.GET.get('q', '').strip()
+
+    if search_query:
+        filtered_topics = [
+            topic for topic in all_topics
+            if search_query.lower() == topic.topic.lower()  # Exact match
+        ]
+        return render(request, 'index.html', {
+            'all_topics': all_topics,
+            'filtered_topics': filtered_topics,
+            'search_query': search_query
+        })
+
+    return render(request, 'index.html', {'all_topics': all_topics})
+    
